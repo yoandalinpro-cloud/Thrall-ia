@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Thrall",
+  "version": "../package.json",
+  "identifier": "fr.thrall.app",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Thrall",
+        "width": 1200,
+        "height": 820,
+        "minWidth": 380,
+        "minHeight": 560,
+        "backgroundColor": "#110605",
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "publisher": "yoan",
+    "shortDescription": "Thrall, ton IA locale",
+    "longDescription": "Appli de discussion pour l'IA locale Thrall (Open WebUI).",
+    "category": "Productivity",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "windows": {
+      "webviewInstallMode": { "type": "downloadBootstrapper" },
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["French"],
+        "displayLanguageSelector": false
+      },
+      "wix": { "language": "fr-FR" }
+    }
+  }
+}
