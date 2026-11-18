@@ -168,7 +168,7 @@ export default function App() {
     };
     try {
       const ctx = history.map((m) => (m.role === 'assistant' ? { ...m, reasoning: undefined } : m));
-      for await (const d of api.stream(model, ctx, { webSearch, signal: ctrl.signal })) {
+      for await (const d of api.stream(model, ctx, { webSearch, signal: ctrl.signal, toolIds: models.find((x) => x.id === model)?.toolIds })) {
         if (d.content) raw += d.content;
         if (d.reasoning) reasoning += d.reasoning;
         if (!pending) {

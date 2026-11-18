@@ -8,6 +8,8 @@ export interface Model {
   image?: string;
   vision: boolean;
   isAgent: boolean;
+  /** outils rattachés à l'agent dans Open WebUI (ex. serveur MCP mails) */
+  toolIds: string[];
 }
 
 export interface Attachment {
@@ -91,6 +93,7 @@ export class OpenWebUI {
           image: img,
           vision: !!meta.capabilities?.vision,
           isAgent: !!m.info?.base_model_id || m.pipe != null || m.owned_by === 'arena',
+          toolIds: Array.isArray(meta.toolIds) ? meta.toolIds : [],
         };
       });
   }
@@ -153,7 +156,7 @@ export class OpenWebUI {
   async *stream(
     model: string,
     history: Msg[],
-    opts: { webSearch: boolean; signal: AbortSignal },
+    opts: { webSearch: boolean; signal: AbortSignal; toolIds?: string[] },
   ): AsyncGenerator<{ content?: string; reasoning?: string }> {
     const files = history
       .flatMap((m) => m.attachments || [])
@@ -167,6 +170,8 @@ export class OpenWebUI {
     };
     if (files.length) body.files = files;
     if (opts.webSearch) body.features = { web_search: true };
+    // Open WebUI n'active les outils que si on les envoie (le site le fait tout seul)
+    if (opts.toolIds?.length) body.tool_ids = opts.toolIds;
 
     const res = await fetch(this.base + '/api/chat/completions', {
       method: 'POST',
